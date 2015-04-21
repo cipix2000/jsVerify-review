@@ -1,2 +1,3 @@
 # jsVerify-review
-Playing with JSVerify
+
+A short review of JSVerify
