@@ -27,7 +27,7 @@ describe('Fun with JSVerify', function () {
         expect(property).toHold();
     });
 
-    it('should validate that the length of the array is smaller or the same with the duplicates removed', function () {
+    it('validates that the length of an array with the duplicates removed is smaller or the same', function () {
         var property = jsc.forall(jsc.array(jsc.nat()), uniqueArrayIsSmallerOrEq);
         expect(property).toHold();
     });
@@ -38,7 +38,7 @@ describe('Fun with JSVerify', function () {
     });
 
     it('should verify that add is commutative', function () {
-        var property = jsc.forall('number', 'number', function (a, b) {
+        var property = jsc.forall('integer', 'integer', function (a, b) {
             return a + b === b + a;
         });
         expect(property).toHold();
@@ -52,16 +52,28 @@ describe('Fun with JSVerify', function () {
     });
 
     it('should not verify that subtract is commutative', function () {
-        var property = jsc.forall('number', 'number', function (a, b) {
+        var property = jsc.forall('integer', 'integer', function (a, b) {
             return a - b === b - a;
         });
         expect(property).toHold();
     });
 
     it('should verify that subtract is not associative', function () {
-        var property = jsc.forall('number', 'number', 'number', function (a, b, c) {
+        var property = jsc.forall('integer', 'integer', 'integer', function (a, b, c) {
             return ((a - b) - c) === (a - (b - c));
         });
         expect(property).not.toHold();
+    });
+
+    it('should have a working suchthat method', function () {
+        var arrayAndIndex = jsc.suchthat(jsc.pair(jsc.array(jsc.integer()), jsc.nat()), function (pair) {
+            return pair[1] <= pair[0].length;
+        });
+
+        var property = jsc.forall(arrayAndIndex, function (pair) {
+            return pair[1] < pair[0].length;
+        });
+
+        expect(property).toHold();
     });
 });
